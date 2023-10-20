@@ -1,3 +1,4 @@
+use std::alloc;
 use std::ptr::NonNull;
 
 pub struct MyVec<T> {
@@ -25,6 +26,14 @@ impl<T> MyVec<T> {
 
     pub fn is_empty(&self) -> bool {
         self.len == 0
+    }
+
+    pub fn push(&mut self) {
+        if self.capacity() == 0 {
+            let layout = alloc::Layout::array::<T>(4).expect("Could not allocate memory.");
+            // alloc::alloc(layout);
+        }
+        todo!()
     }
 }
 
