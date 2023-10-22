@@ -31,7 +31,7 @@ impl<T> MyVec<T> {
     pub fn push(&mut self) {
         if self.capacity() == 0 {
             let layout = alloc::Layout::array::<T>(4).expect("Could not allocate memory.");
-            // alloc::alloc(layout);
+            let ptr = unsafe { alloc::alloc(layout) as *mut T };
         }
         todo!()
     }
