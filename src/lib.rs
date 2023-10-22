@@ -30,6 +30,10 @@ impl<T> MyVec<T> {
 
     pub fn push(&mut self) {
         if self.capacity() == 0 {
+            if std::mem::size_of::<T>() == 0 {
+                panic!("No zero sized types");
+            }
+
             let layout = alloc::Layout::array::<T>(4).expect("Could not allocate memory.");
             // SAFETY: Layout is hardcoded to be 4* size_of<T>
             let ptr = unsafe { alloc::alloc(layout) as *mut T };
