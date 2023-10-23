@@ -35,6 +35,7 @@ impl<T> MyVec<T> {
             let layout = alloc::Layout::array::<T>(4).expect("Could not allocate memory.");
             // SAFETY: Layout is hardcoded to be 4* size_of<T> and size_of<T> is greater than zero
             let ptr = unsafe { alloc::alloc(layout) as *mut T };
+            let ptr = NonNull::new(ptr).expect("Could not allocate memory");
         }
         todo!()
     }
