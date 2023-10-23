@@ -28,14 +28,23 @@ impl<T> MyVec<T> {
         self.len == 0
     }
 
-    pub fn push(&mut self) {
+    pub fn push(&mut self, item: T) {
         if self.capacity() == 0 {
             assert_ne!(std::mem::size_of::<T>(), 0, "No zero sized types");
 
-            let layout = alloc::Layout::array::<T>(4).expect("Could not allocate memory.");
+            let layout: alloc::Layout =
+                alloc::Layout::array::<T>(4).expect("Could not allocate memory.");
+
             // SAFETY: Layout is hardcoded to be 4* size_of<T> and size_of<T> is greater than zero
-            let ptr = unsafe { alloc::alloc(layout) as *mut T };
-            let ptr = NonNull::new(ptr).expect("Could not allocate memory");
+            let ptr: *mut T = unsafe { alloc::alloc(layout) as *mut T };
+            let ptr: NonNull<T> = NonNull::new(ptr).expect("Could not allocate memory");
+
+            // SAFETY: ptr is non-null and we have just allocated space in memory for this one item (and 3 more)
+            unsafe { ptr.as_ptr().write(item) };
+
+            self.ptr = ptr;
+            self.capacity = 4;
+            self.len = 1;
         }
         todo!()
     }
