@@ -45,7 +45,16 @@ impl<T> MyVec<T> {
             self.ptr = ptr;
             self.capacity = 4;
             self.len = 1;
-        } else if self.len <= self.capacity {
+        } else if self.len < self.capacity {
+            let offset: usize = self
+                .len
+                .checked_mul(std::mem::size_of::<T>())
+                .expect("Cannot find memory location");
+            assert_eq!(offset < isize::MAX as usize, "Wrapped isize");
+            // Offset cannot wrap around and pointer is pointing to valid memory
+            // And writing to an offset at self.len is valid
+            unsafe { self.ptr.as_ptr().add(self.len).write(item) } //do we lose ownership of self.len?
+            self.len += 1;
         } else {
             todo!();
         }
