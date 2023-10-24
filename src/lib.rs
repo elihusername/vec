@@ -45,8 +45,10 @@ impl<T> MyVec<T> {
             self.ptr = ptr;
             self.capacity = 4;
             self.len = 1;
+        } else if self.len <= self.capacity {
+        } else {
+            todo!();
         }
-        todo!()
     }
 }
 
