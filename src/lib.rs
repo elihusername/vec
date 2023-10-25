@@ -58,7 +58,14 @@ impl<T> MyVec<T> {
             self.len += 1;
         } else {
             let align: usize = std::mem::align_of::<T>();
-            let size: usize = std::mem::size_of::<T>();
+            let size: usize = std::mem::size_of::<T>() * self.capacity;
+
+            size.checked_add(size % align).expect("can't allocate");
+
+            unsafe {
+                let layout: alloc::Layout = alloc::Layout::from_size_align_unchecked(size, align);
+            }
+
             todo!();
         }
     }
