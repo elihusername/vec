@@ -1,4 +1,5 @@
 use std::alloc;
+use std::intrinsics::size_of;
 use std::ptr::NonNull;
 
 pub struct MyVec<T> {
@@ -50,12 +51,14 @@ impl<T> MyVec<T> {
                 .len
                 .checked_mul(std::mem::size_of::<T>())
                 .expect("Cannot find memory location");
-            assert_eq!(offset < isize::MAX as usize, "Wrapped isize");
+            assert!(offset < isize::MAX as usize, "Wrapped isize");
             // Offset cannot wrap around and pointer is pointing to valid memory
             // And writing to an offset at self.len is valid
             unsafe { self.ptr.as_ptr().add(self.len).write(item) } //do we lose ownership of self.len?
             self.len += 1;
         } else {
+            let align: usize = std::mem::align_of::<T>();
+            let size: usize = std::mem::size_of::<T>();
             todo!();
         }
     }
