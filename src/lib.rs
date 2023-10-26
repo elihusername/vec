@@ -1,5 +1,4 @@
 use std::alloc;
-use std::intrinsics::size_of;
 use std::ptr::NonNull;
 
 pub struct MyVec<T> {
@@ -54,9 +53,15 @@ impl<T> MyVec<T> {
             assert!(offset < isize::MAX as usize, "Wrapped isize");
             // Offset cannot wrap around and pointer is pointing to valid memory
             // And writing to an offset at self.len is valid
-            unsafe { self.ptr.as_ptr().add(self.len).write(item) } //do we lose ownership of self.len?
+            unsafe {
+                self.ptr
+                    .as_ptr()
+                    .add(self.len) //do we lose ownership of self.len?
+                    .write(item)
+            }
             self.len += 1;
         } else {
+            let new_capacity: usize = self.capacity.checked_mul(2).expect("Capacity Wrapped");
             let align: usize = std::mem::align_of::<T>();
             let size: usize = std::mem::size_of::<T>() * self.capacity;
 
@@ -64,6 +69,8 @@ impl<T> MyVec<T> {
 
             unsafe {
                 let layout: alloc::Layout = alloc::Layout::from_size_align_unchecked(size, align);
+                let new_size: usize = std::mem::size_of::<T>() * new_capacity;
+                alloc::realloc(self.ptr.as_ptr(), layout, new_size)
             }
 
             todo!();
@@ -83,7 +90,7 @@ mod tests {
 
     #[test]
     fn it_works() {
-        let mut vec = MyVec::<usize>::new();
+        let mut vec: MyVec<usize> = MyVec::<usize>::new();
 
         // vec.push(1usize);
         // vec.push(1);
