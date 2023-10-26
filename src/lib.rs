@@ -61,6 +61,7 @@ impl<T> MyVec<T> {
             }
             self.len += 1;
         } else {
+            debug_assert!(self.len == self.capacity);
             let new_capacity: usize = self.capacity.checked_mul(2).expect("Capacity Wrapped");
             let align: usize = std::mem::align_of::<T>();
             let size: usize = std::mem::size_of::<T>() * self.capacity;
@@ -70,7 +71,8 @@ impl<T> MyVec<T> {
             unsafe {
                 let layout: alloc::Layout = alloc::Layout::from_size_align_unchecked(size, align);
                 let new_size: usize = std::mem::size_of::<T>() * new_capacity;
-                alloc::realloc(self.ptr.as_ptr(), layout, new_size)
+                let ptr: *mut u8 = alloc::realloc(self.ptr.as_ptr() as *mut u8, layout, new_size);
+                let ptr: NonNull<T> = NonNull::new(ptr as *mut T).expect("Could not reallocate");
             }
 
             todo!();
