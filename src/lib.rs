@@ -74,12 +74,11 @@ impl<T> MyVec<T> {
                 let ptr: *mut u8 = alloc::realloc(self.ptr.as_ptr() as *mut u8, layout, new_size);
                 let ptr: NonNull<T> = NonNull::new(ptr as *mut T).expect("Could not reallocate");
                 ptr.as_ptr().add(self.len).write(item);
-                self.ptr = ptr;
-                self.len += 1;
-                self.capacity = new_capacity;
             }
 
-            todo!();
+            self.ptr = ptr;
+            self.len += 1;
+            self.capacity = new_capacity;
         }
     }
 }
