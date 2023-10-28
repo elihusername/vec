@@ -68,13 +68,14 @@ impl<T> MyVec<T> {
 
             size.checked_add(size % align).expect("can't allocate");
 
-            unsafe {
+            let ptr: NonNull<T> = unsafe {
                 let layout: alloc::Layout = alloc::Layout::from_size_align_unchecked(size, align);
                 let new_size: usize = std::mem::size_of::<T>() * new_capacity;
                 let ptr: *mut u8 = alloc::realloc(self.ptr.as_ptr() as *mut u8, layout, new_size);
                 let ptr: NonNull<T> = NonNull::new(ptr as *mut T).expect("Could not reallocate");
                 ptr.as_ptr().add(self.len).write(item);
-            }
+                ptr
+            };
 
             self.ptr = ptr;
             self.len += 1;
