@@ -1,6 +1,8 @@
 use std::alloc;
 use std::ptr::NonNull;
 
+//TODO:: Line by line assessment
+
 pub struct MyVec<T> {
     ptr: NonNull<T>,
     len: usize,
