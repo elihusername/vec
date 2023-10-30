@@ -86,6 +86,14 @@ impl<T> MyVec<T> {
     }
 }
 
+impl<T> Drop for MyVec<T> {
+    fn drop(&mut self) {
+        unsafe {
+            std::ptr::drop_in_place(std::slice::from_raw_parts_mut(self.ptr.as_ptr(), self.len));
+        }
+    }
+}
+
 impl<T> Default for MyVec<T> {
     fn default() -> Self {
         Self::new()
