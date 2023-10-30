@@ -100,12 +100,13 @@ mod tests {
     fn it_works() {
         let mut vec: MyVec<usize> = MyVec::<usize>::new();
 
-        // vec.push(1usize);
-        // vec.push(1);
-        // vec.push(2);
+        vec.push(1usize);
+        vec.push(2);
+        vec.push(3);
+        vec.push(4);
+        vec.push(5);
 
-        assert_eq!(vec.capacity(), 4);
-        assert_eq!(vec.len(), 3);
-        println!("")
+        assert_eq!(vec.capacity(), 8);
+        assert_eq!(vec.len(), 5);
     }
 }
