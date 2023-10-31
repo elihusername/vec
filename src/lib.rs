@@ -2,6 +2,7 @@ use std::alloc;
 use std::ptr::NonNull;
 
 //TODO:: Line by line assessment
+//Spent today just learning fundamentals
 
 pub struct MyVec<T> {
     ptr: NonNull<T>,
