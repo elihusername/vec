@@ -1,15 +1,12 @@
 use std::alloc;
 use std::ptr::NonNull;
 
-//TODO:: Line by line assessment
-//Spent today just learning fundamentals x3
-
 pub struct MyVec<T> {
     ptr: NonNull<T>,
     len: usize,
     capacity: usize,
 }
-
+x
 impl<T> MyVec<T> {
     pub fn new() -> Self {
         Self {
